@@ -84,11 +84,11 @@
   const typed = $('#typed');
   if (typed) {
     const roles = [
-      'membuat poster promo yang menarik mata',
-      'merapikan foto produk jadi lebih hidup',
-      'mengedit video pendek untuk media sosial',
-      'menggambar ikon dan logo vektor',
+      'membangun website dengan PHP dan MySQL',
+      'hobi vibe coding bareng AI',
+      'membuat absensi digital untuk 600+ siswa',
       'menulis PHP, HTML, dan JavaScript',
+      'mendesain poster promo di Canva',
     ];
     if (reduce) {
       typed.textContent = roles[0];

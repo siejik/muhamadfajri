@@ -24,7 +24,9 @@ Vercel akan menjalankan `npm run build` (compile Tailwind), lalu menyajikan fold
 
 ## Mengedit
 
-- **Tambah project**: salin satu blok `<li class="proj ...">` di `index.html`, ganti gambar dan atribut `data-title`, `data-brand`, `data-tool`, `data-media`, `data-desc`, `data-imgs`, `data-link`. Atribut `data-cat` menentukan filter (`photoshop`, `canva`, `illustrator`, `foto`, `video`).
+- **Tambah coding project**: salin satu `<article class="tilt glass group ...">` di bagian Coding project di `index.html`, ganti judul, URL, chip, deskripsi, dan nama gambar (`assets/img/code-*.webp`, screenshot 1900x910 tanpa bar browser). Gambar kedua (opsional) muncul saat kartu di-hover.
+- **Project yang disembunyikan** (foto produk, Illustrator, Photoshop, video) disimpan di `<template id="arsip-project">` di akhir section project. Pindahkan `<li>`-nya ke `<ul id="proj-grid">` untuk menampilkannya lagi.
+- **Tambah Canva project**: salin satu blok `<li class="proj ...">` di `index.html`, ganti gambar dan atribut `data-title`, `data-brand`, `data-tool`, `data-media`, `data-desc`, `data-imgs`, `data-link`. Atribut `data-cat` menentukan filter (`photoshop`, `canva`, `illustrator`, `foto`, `video`).
 - **Ganti kontak**: cari `wa.me` dan `instagram.com` di `index.html`.
 - **Ganti warna**: `tailwind.config.js` (`macaw`, `sun`, `leaf`, `ink`).
 - Setelah mengubah class Tailwind, jalankan `npm install` lalu `npm run build` (atau `npm run dev` untuk mode watch).
