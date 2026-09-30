@@ -4,7 +4,21 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        ink: { 950: '#04081A', 900: '#070C22', 800: '#0D1535', 700: '#16204A' },
+        white: 'rgb(var(--c-fg) / <alpha-value>)',
+        ink: {
+          950: 'rgb(var(--ink-950) / <alpha-value>)',
+          900: 'rgb(var(--ink-900) / <alpha-value>)',
+          800: 'rgb(var(--ink-800) / <alpha-value>)',
+          700: 'rgb(var(--ink-700) / <alpha-value>)',
+        },
+        badge: {
+          green: 'rgb(var(--b-green))',
+          purple: 'rgb(var(--b-purple))',
+          amber: 'rgb(var(--b-amber))',
+          sky: 'rgb(var(--b-sky))',
+          gold: 'rgb(var(--b-gold))',
+          azure: 'rgb(var(--b-azure))',
+        },
         macaw: { DEFAULT: '#3CC8F0', deep: '#1E7FD6' },
         sun: { DEFAULT: '#FFB627', deep: '#FF8A1F' },
         leaf: { DEFAULT: '#6ED04F', deep: '#2E9B4A' },

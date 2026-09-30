@@ -29,6 +29,13 @@ Vercel akan menjalankan `npm run build` (compile Tailwind), lalu menyajikan fold
 - **Ganti warna**: `tailwind.config.js` (`macaw`, `sun`, `leaf`, `ink`).
 - Setelah mengubah class Tailwind, jalankan `npm install` lalu `npm run build` (atau `npm run dev` untuk mode watch).
 
+## Tema gelap / terang
+
+- Tombol tema ada di navbar. Pilihan pengunjung disimpan di browser; kunjungan pertama mengikuti tema sistem mereka.
+- Semua warna tema ada di variabel CSS di `src/input.css` (blok `:root` untuk gelap, `html.light` untuk terang). Mau ubah warna terang, edit blok `html.light`.
+- Kartu project memakai class `keep-dark` supaya teks di atas gambar selalu terbaca di kedua tema. Beri class ini untuk kartu baru.
+- Setelah mengubah `src/input.css`, jalankan `npm run build`.
+
 ## Preview link saat dibagikan
 
 Setelah domain Vercel kamu jadi, ubah `og:image` di `<head>` `index.html` menjadi alamat lengkap, misalnya `https://namakamu.vercel.app/assets/img/og.jpg`, supaya preview muncul di WhatsApp dan media sosial.

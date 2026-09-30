@@ -529,4 +529,27 @@
       { passive: true }
     );
   }
+
+  /* ───────── Tema gelap/terang (tersimpan di browser, efek lingkaran melebar) ───────── */
+  {
+    const btn = $('#theme-btn'), meta = $('#tc');
+    const apply = (light) => {
+      root.classList.toggle('light', light);
+      btn.setAttribute('aria-label', light ? 'Ganti ke tema gelap' : 'Ganti ke tema terang');
+      meta && meta.setAttribute('content', light ? '#EEF3FB' : '#070C22');
+    };
+    apply(root.classList.contains('light'));
+    btn.addEventListener('click', (e) => {
+      const light = !root.classList.contains('light');
+      try { localStorage.setItem('theme', light ? 'light' : 'dark'); } catch (_) {}
+      if (!document.startViewTransition || reduce) return apply(light);
+      const x = e.clientX || innerWidth - 40, y = e.clientY || 40, r = Math.hypot(innerWidth, innerHeight);
+      document.startViewTransition(() => apply(light)).ready.then(() =>
+        root.animate(
+          { clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] },
+          { duration: 700, easing: 'ease-in-out', pseudoElement: '::view-transition-new(root)' }
+        )
+      );
+    });
+  }
 })();

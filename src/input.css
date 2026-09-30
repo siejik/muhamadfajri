@@ -2,6 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ───────── Tema: variabel warna (gelap = default, terang = html.light) ───────── */
+:root,
+html.light .keep-dark {
+  --c-fg: 255 255 255; --c-body: 238 242 255;
+  --ink-950: 4 8 26; --ink-900: 7 12 34; --ink-800: 13 21 53; --ink-700: 22 32 74;
+  --glass-a: rgba(255,255,255,.11); --glass-b: rgba(255,255,255,.03); --glass-bd: rgba(255,255,255,.14); --glass-hi: rgba(255,255,255,.28); --glass-sh: rgba(0,0,0,.65);
+  --gs-a: rgba(255,255,255,.16); --gs-b: rgba(255,255,255,.05); --gs-bd: rgba(255,255,255,.2); --gs-hi: rgba(255,255,255,.4); --gs-sh: rgba(0,0,0,.8);
+  --glass-ha: rgba(255,255,255,.2); --glass-hb: rgba(255,255,255,.06);
+  --tilt-glow: rgba(255,255,255,.22); --tilt-bd: rgba(255,255,255,.34);
+  --b-green: 201 245 184; --b-purple: 217 194 255; --b-amber: 255 208 138; --b-sky: 155 228 250; --b-gold: 255 221 160; --b-azure: 154 219 255;
+  --bg1: rgba(60,200,240,.16); --bg2: rgba(255,182,39,.10); --bg3: rgba(110,208,79,.10); --blob-o: .55;
+}
+html.light {
+  --c-fg: 11 18 40; --c-body: 17 24 46;
+  --ink-950: 220 232 247; --ink-900: 238 243 251; --ink-800: 255 255 255; --ink-700: 208 222 244;
+  --glass-a: rgba(255,255,255,.72); --glass-b: rgba(255,255,255,.38); --glass-bd: rgba(30,60,120,.12); --glass-hi: rgba(255,255,255,.95); --glass-sh: rgba(40,70,130,.28);
+  --gs-a: rgba(255,255,255,.82); --gs-b: rgba(255,255,255,.5); --gs-bd: rgba(30,60,120,.14); --gs-hi: #fff; --gs-sh: rgba(40,70,130,.35);
+  --glass-ha: rgba(255,255,255,.95); --glass-hb: rgba(255,255,255,.6);
+  --tilt-glow: rgba(30,127,214,.16); --tilt-bd: rgba(30,127,214,.45);
+  --b-green: 22 101 52; --b-purple: 91 33 182; --b-amber: 146 64 14; --b-sky: 14 116 144; --b-gold: 133 77 14; --b-azure: 11 93 153;
+  --bg1: rgba(60,200,240,.30); --bg2: rgba(255,182,39,.22); --bg3: rgba(110,208,79,.20); --blob-o: .32;
+}
+/* .keep-dark = area di atas gambar (kartu project) yang selalu bergaya gelap */
+html.light .keep-dark {
+  color: rgb(var(--c-body));
+}
+
+
 /* ───────── Base ───────── */
 @layer base {
   html {
@@ -10,12 +38,13 @@
     scroll-padding-top: 6rem;
   }
   body {
-    @apply bg-ink-900 font-sans text-[#EEF2FF] antialiased;
+    @apply bg-ink-900 font-sans antialiased;
+    color: rgb(var(--c-body));
     overflow-x: hidden;
     background-image:
-      radial-gradient(1200px 700px at 12% -10%, rgba(60, 200, 240, 0.16), transparent 60%),
-      radial-gradient(900px 600px at 100% 30%, rgba(255, 182, 39, 0.10), transparent 60%),
-      radial-gradient(900px 700px at 0% 100%, rgba(110, 208, 79, 0.10), transparent 60%);
+      radial-gradient(1200px 700px at 12% -10%, var(--bg1), transparent 60%),
+      radial-gradient(900px 600px at 100% 30%, var(--bg2), transparent 60%),
+      radial-gradient(900px 700px at 0% 100%, var(--bg3), transparent 60%);
     background-attachment: fixed;
   }
   ::selection {
@@ -39,24 +68,24 @@
 /* ───────── Glass system ───────── */
 @layer components {
   .glass {
-    background: linear-gradient(140deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.03));
+    background: linear-gradient(140deg, var(--glass-a), var(--glass-b));
     -webkit-backdrop-filter: blur(22px) saturate(170%);
     backdrop-filter: blur(22px) saturate(170%);
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    border: 1px solid var(--glass-bd);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      inset 0 1px 0 var(--glass-hi),
       inset 0 -1px 0 rgba(255, 255, 255, 0.04),
-      0 30px 60px -30px rgba(0, 0, 0, 0.65);
+      0 30px 60px -30px var(--glass-sh);
   }
   .glass-strong {
-    background: linear-gradient(140deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05));
+    background: linear-gradient(140deg, var(--gs-a), var(--gs-b));
     -webkit-backdrop-filter: blur(34px) saturate(190%);
     backdrop-filter: blur(34px) saturate(190%);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--gs-bd);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      inset 0 1px 0 var(--gs-hi),
       inset 0 0 40px rgba(255, 255, 255, 0.03),
-      0 50px 100px -40px rgba(0, 0, 0, 0.8);
+      0 50px 100px -40px var(--gs-sh);
   }
 
   /* Kartu yang mengikuti pointer: tilt + kilau */
@@ -74,14 +103,14 @@
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.35s;
-    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.22), transparent 45%);
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), var(--tilt-glow), transparent 45%);
     mix-blend-mode: soft-light;
   }
   .tilt:hover::after {
     opacity: 1;
   }
   .tilt:hover {
-    border-color: rgba(255, 255, 255, 0.34);
+    border-color: var(--tilt-bd);
   }
 
   /* Tombol */
@@ -103,7 +132,7 @@
     @apply glass;
   }
   .btn-glass:hover {
-    background: linear-gradient(140deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.06));
+    background: linear-gradient(140deg, var(--glass-ha), var(--glass-hb));
   }
 
   /* Chip filter */
@@ -151,7 +180,7 @@
     position: absolute;
     border-radius: 9999px;
     filter: blur(110px);
-    opacity: 0.55;
+    opacity: var(--blob-o);
     will-change: transform;
   }
 
@@ -304,4 +333,42 @@
   opacity: 1 !important;
   transform: none !important;
   filter: none !important;
+}
+
+/* ───────── Tema terang: penyesuaian ───────── */
+html.light .grad-text .ch {
+  background-image: linear-gradient(100deg, #1e7fd6 0%, #0e9fcb 30%, #ff8a1f 70%, #e06a00 100%);
+}
+html.light .text-macaw {
+  color: #1e7fd6;
+}
+html.light ::selection {
+  background: #1e7fd6;
+  color: #fff;
+}
+
+/* Tombol tema: ikon matahari (gelap) dan bulan (terang) bertukar dengan putaran */
+.ti {
+  position: absolute;
+  transition: transform 0.6s cubic-bezier(0.2, 0.9, 0.2, 1), opacity 0.4s;
+}
+.ti-moon { opacity: 0; transform: rotate(-90deg) scale(0.4); }
+html.light .ti-sun { opacity: 0; transform: rotate(90deg) scale(0.4); }
+html.light .ti-moon { opacity: 1; transform: none; }
+
+/* Transisi tema berbentuk lingkaran (View Transitions) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Kursor kustom: di tema terang tanpa blend difference agar tidak jadi lingkaran hitam */
+html.light .cursor-ring {
+  mix-blend-mode: normal;
+  border-color: rgba(11, 18, 40, 0.5);
+}
+html.light .cursor-ring.hot {
+  background: rgba(30, 127, 214, 0.2);
+  border-color: rgba(30, 127, 214, 0.7);
 }
