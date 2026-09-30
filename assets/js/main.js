@@ -392,6 +392,10 @@
       $('#lb-media').textContent = d.media || '-';
       $('#lb-desc').textContent = d.desc || '';
       $('#lb-link').href = d.link || '#';
+      $('#lb-link').textContent = d.linktext || 'Buka di Google Drive';
+      lbCard.style.gridTemplateColumns = d.labels && innerWidth >= 768 ? '1.75fr .85fr' : '';
+      const lab = (d.labels || 'Brand|Software|Media').split('|');
+      ['#lb-l1', '#lb-l2', '#lb-l3'].forEach((s, k) => ($(s).textContent = lab[k]));
       $('#lb-count').textContent = `${idx + 1} / ${list.length}`;
       const imgs = (d.imgs || '').split(',').filter(Boolean);
       const set = (src) => {

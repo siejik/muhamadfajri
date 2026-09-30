@@ -2,6 +2,12 @@
 
 Website portfolio statis dengan **Tailwind CSS** dan konsep **glassmorphism**. Tanpa framework, tanpa build wajib: CSS hasil compile sudah disertakan (`assets/css/style.css`).
 
+## Halaman
+
+- `index.html` beranda (coding project + kartu menuju halaman desain)
+- `canva.html` semua Canva project, `adobe.html` semua project Photoshop dan Illustrator (dengan filter)
+- Tambah project Canva/Adobe: salin satu `<li class="proj ...">` di `canva.html` atau `adobe.html`. Tailwind membaca semua file `*.html`.
+
 ## Struktur
 
 ```
