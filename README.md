@@ -47,3 +47,10 @@ Vercel akan menjalankan `npm run build` (compile Tailwind), lalu menyajikan fold
 ## Preview link saat dibagikan
 
 Setelah domain Vercel kamu jadi, ubah `og:image` di `<head>` `index.html` menjadi alamat lengkap, misalnya `https://namakamu.vercel.app/assets/img/og.jpg`, supaya preview muncul di WhatsApp dan media sosial.
+
+## Performa dan loading screen
+
+- Loading screen tampil sekali per kunjungan (tidak muncul saat kembali dari halaman Canva/Adobe). Tambahkan `?loader` di URL untuk memaksanya muncul.
+- Blob latar tidak lagi memakai `filter: blur`, kursor dan spotlight bergerak lewat `transform`, section di bawah layar memakai `content-visibility`, dan loop animasi berhenti saat idle.
+- Mode ringan aktif otomatis hanya jika perangkat terukur lag (tersimpan di localStorage). Paksa dengan `?lite=1`, matikan dengan `?lite=0`.
+- Cache: gambar `immutable` 1 tahun, CSS/JS selalu revalidasi (aman untuk update). Jika mengganti gambar, beri nama file baru.

@@ -16,6 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="/assets/img/avatar.webp">
+  <script>try{var d=document.documentElement,q=location.search;if(/lite=1/.test(q))localStorage.lite='1';if(/lite=0/.test(q))localStorage.lite='0';if(localStorage.lite=='1')d.classList.add('lite')}catch(e){}</script>
   <script>try{var t=localStorage.getItem('theme');if(t?t=='light':matchMedia('(prefers-color-scheme: light)').matches)document.documentElement.classList.add('light')}catch(e){}</script>
   <link rel="stylesheet" href="/assets/css/style.css">
 </head>
@@ -27,7 +28,7 @@
   <div id="progress" class="fixed left-0 top-0 z-[70] h-[3px] w-full origin-left scale-x-0 bg-gradient-to-r from-macaw via-sun to-leaf" aria-hidden="true"></div>
 
   <!-- Spotlight & kursor -->
-  <div id="spot" class="pointer-events-none fixed inset-0 z-[1]" aria-hidden="true"></div>
+  <div id="spot" class="pointer-events-none fixed left-0 top-0 z-[1] -ml-[520px] -mt-[520px] h-[1040px] w-[1040px]" aria-hidden="true"></div>
   <div id="cursor" class="cursor-ring" aria-hidden="true"></div>
 
   <!-- Latar aurora -->

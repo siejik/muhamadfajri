@@ -1,4 +1,4 @@
-(() => {
+const boot = () => {
   'use strict';
 
   const $ = (s, c = document) => c.querySelector(s);
@@ -44,6 +44,9 @@
     let px = -9999;
     let py = -9999;
     let lastMove = 0;
+    let frame = 0;
+    let heroVis = true;
+    new IntersectionObserver(([e]) => (heroVis = e.isIntersecting)).observe(chars[0].closest('section') || document.body);
     const weights = chars.map(() => 720);
     let ready = false;
     setTimeout(() => (ready = true), 1700);
@@ -59,9 +62,10 @@
     );
 
     const tick = (t) => {
-      if (ready && !document.hidden) {
-        const active = t - lastMove < 1800;
-        const rects = chars.map((c) => c.getBoundingClientRect());
+      const active = t - lastMove < 1800;
+      if (!active && ++frame % 2) return requestAnimationFrame(tick);
+      if (ready && heroVis && !document.hidden) {
+        const rects = active ? chars.map((c) => c.getBoundingClientRect()) : null;
         chars.forEach((c, i) => {
           let target;
           if (active) {
@@ -259,22 +263,26 @@
         tx = e.clientX;
         ty = e.clientY;
         ring && ring.classList.add('active');
+        kick();
       },
       { passive: true }
     );
     document.addEventListener('pointerleave', () => ring && ring.classList.remove('active'));
     const hot = 'a, button, [data-magnetic], [data-open], input, textarea';
     document.addEventListener('pointerover', (e) => ring && ring.classList.toggle('hot', !!e.target.closest(hot)));
+    let on = false;
+    const kick = () => on || ((on = true), requestAnimationFrame(loop));
     const loop = () => {
       rx = lerp(rx, tx, 0.22);
       ry = lerp(ry, ty, 0.22);
       sx = lerp(sx, tx, 0.08);
       sy = lerp(sy, ty, 0.08);
       if (ring) ring.style.transform = `translate3d(${rx}px, ${ry}px, 0)`;
-      if (spot) spot.style.background = `radial-gradient(520px circle at ${sx}px ${sy}px, rgba(120,220,255,.11), transparent 60%)`;
-      requestAnimationFrame(loop);
+      if (spot) spot.style.transform = `translate3d(${sx}px, ${sy}px, 0)`;
+      if (Math.abs(tx - rx) + Math.abs(ty - ry) + Math.abs(tx - sx) + Math.abs(ty - sy) > 0.4) requestAnimationFrame(loop);
+      else on = false;
     };
-    loop();
+    kick();
   }
 
   /* ───────── Blob mengikuti pointer (parallax halus) ───────── */
@@ -289,9 +297,12 @@
       (e) => {
         bx = e.clientX / innerWidth - 0.5;
         by = e.clientY / innerHeight - 0.5;
+        pk();
       },
       { passive: true }
     );
+    let pon = false;
+    const pk = () => pon || ((pon = true), requestAnimationFrame(move));
     const move = () => {
       cx = lerp(cx, bx, 0.05);
       cy = lerp(cy, by, 0.05);
@@ -299,9 +310,9 @@
         const d = Number(b.dataset.depth);
         b.style.translate = `${(cx * d).toFixed(1)}px ${(cy * d).toFixed(1)}px`;
       });
-      requestAnimationFrame(move);
+      if (Math.abs(bx - cx) + Math.abs(by - cy) > 0.0004) requestAnimationFrame(move);
+      else pon = false;
     };
-    move();
   }
 
   /* ───────── Tilt 3D + kilau ───────── */
@@ -556,4 +567,62 @@
       );
     });
   }
-})();
+
+  /* ───────── Blob lembut tanpa filter blur (tampilan sama, GPU jauh lebih ringan) ───────── */
+  const SIG = 110;
+  const softBlobs = () =>
+    $$('.blob').forEach((b) => {
+      b.style.margin = '';
+      b.style.width = b.style.height = '';
+      const R = b.offsetWidth / 2;
+      if (!R) return;
+      const pad = SIG * 3;
+      const T = R + pad;
+      b.style.width = b.style.height = T * 2 + 'px';
+      b.style.margin = -pad + 'px';
+      const stops = [];
+      for (let k = 0; k <= 16; k++) {
+        const r = (T * k) / 16;
+        let a = 0;
+        for (let i = 0; i < 24; i++) {
+          const s = ((i + 0.5) / 24) * R;
+          for (let q = 0; q < 24; q++) {
+            const th = (q / 24) * Math.PI * 2;
+            const d2 = (r - s * Math.cos(th)) ** 2 + (s * Math.sin(th)) ** 2;
+            a += Math.exp(-d2 / (2 * SIG * SIG)) * s;
+          }
+        }
+        a = (a * (R / 24) * ((Math.PI * 2) / 24)) / (2 * Math.PI * SIG * SIG);
+        stops.push(`rgba(0,0,0,${Math.min(1, a).toFixed(3)}) ${((k / 16) * 100).toFixed(1)}%`);
+      }
+      const m = `radial-gradient(closest-side, ${stops.join(',')})`;
+      b.style.webkitMaskImage = b.style.maskImage = m;
+    });
+  softBlobs();
+  let rt;
+  addEventListener('resize', () => (clearTimeout(rt), (rt = setTimeout(softBlobs, 250))));
+
+  /* ───────── Mode ringan otomatis: hanya jika perangkat terukur lag ───────── */
+  try {
+    if (!root.classList.contains('lite') && localStorage.lite !== '0') {
+      setTimeout(() => {
+        const d = [];
+        let last = performance.now();
+        const t0 = last;
+        const f = (t) => {
+          d.push(t - last);
+          last = t;
+          if (d.length < 90 && t - t0 < 4500) return requestAnimationFrame(f);
+          d.sort((a, b) => a - b);
+          if (d.length > 20 && d[d.length >> 1] > 26) {
+            root.classList.add('lite');
+            localStorage.lite = '1';
+          }
+        };
+        requestAnimationFrame(f);
+      }, 3500);
+    }
+  } catch (_) {}
+};
+if (document.documentElement.classList.contains('loading')) addEventListener('site:ready', boot, { once: true });
+else boot();

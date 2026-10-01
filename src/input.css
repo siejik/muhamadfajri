@@ -91,9 +91,7 @@ html.light .keep-dark {
   /* Kartu yang mengikuti pointer: tilt + kilau */
   .tilt {
     position: relative;
-    transform-style: preserve-3d;
     transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s, border-color 0.35s;
-    will-change: transform;
   }
   .tilt::after {
     content: '';
@@ -179,9 +177,10 @@ html.light .keep-dark {
   .blob {
     position: absolute;
     border-radius: 9999px;
-    filter: blur(110px);
     opacity: var(--blob-o);
     will-change: transform;
+    -webkit-mask-image: radial-gradient(closest-side, #000 30%, transparent 100%);
+    mask-image: radial-gradient(closest-side, #000 30%, transparent 100%);
   }
 
   /* Timeline */
@@ -372,3 +371,48 @@ html.light .cursor-ring.hot {
   background: rgba(30, 127, 214, 0.2);
   border-color: rgba(30, 127, 214, 0.7);
 }
+
+/* ───────── Performa ───────── */
+.tilt:hover { will-change: transform; }
+.tilt::after { visibility: hidden; transition: opacity 0.35s, visibility 0s 0.35s; }
+.tilt:hover::after { visibility: visible; transition-delay: 0s; }
+.no-blur { -webkit-backdrop-filter: none; backdrop-filter: none; }
+#spot {
+  background: radial-gradient(circle closest-side, rgba(120, 220, 255, 0.11), transparent 60%);
+  will-change: transform;
+}
+main > section:not(#home) { content-visibility: auto; contain-intrinsic-size: auto 1000px; }
+
+/* Mode ringan (otomatis hanya untuk perangkat yang terukur lag) */
+:root { --lite-bg: rgba(24, 36, 80, 0.72); }
+html.light { --lite-bg: rgba(255, 255, 255, 0.88); }
+html.light .keep-dark { --lite-bg: rgba(24, 36, 80, 0.72); }
+html.lite .glass, html.lite .glass-strong { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--lite-bg); }
+html.lite .blob { animation: none; }
+html.lite #spot { display: none; }
+html.lite .cursor-ring { mix-blend-mode: normal; }
+html.lite .tilt::after { display: none; }
+
+/* ───────── Loading screen ───────── */
+#loader { position: fixed; inset: 0; z-index: 200; display: none; place-items: center; overflow: hidden; color: rgb(var(--c-body)); }
+html.loading #loader { display: grid; }
+html.loading { overflow: hidden; }
+html.loading .blob { animation-play-state: paused; }
+.ld-half { position: absolute; left: 0; right: 0; height: 50.5%; background: rgb(var(--ink-900)); transition: transform 0.95s cubic-bezier(0.76, 0, 0.24, 1) 0.1s; }
+.ld-top { top: 0; } .ld-bot { bottom: 0; }
+#loader.out .ld-top { transform: translateY(-101%); }
+#loader.out .ld-bot { transform: translateY(101%); }
+.ld-in { position: relative; display: flex; flex-direction: column; align-items: center; gap: 1.1rem; padding: 1.5rem; text-align: center; transition: opacity 0.4s, transform 0.6s cubic-bezier(0.6, 0, 0.9, 0.4); }
+#loader.out .ld-in { opacity: 0; transform: scale(0.92) translateY(-10px); }
+.ld-glow { position: absolute; width: 560px; height: 560px; max-width: 120vw; border-radius: 9999px; background: radial-gradient(circle closest-side, rgba(60, 200, 240, 0.22), rgba(255, 182, 39, 0.08) 55%, transparent); animation: ldpulse 3s ease-in-out infinite; }
+@keyframes ldpulse { 50% { transform: scale(1.12); opacity: 0.75; } }
+.ld-logo { position: relative; display: grid; place-items: center; width: 104px; height: 104px; border-radius: 30px; font: 800 38px/1 'Bricolage Grotesque', sans-serif; color: #04101c; background: linear-gradient(135deg, #3cc8f0, #ffb627); box-shadow: 0 20px 60px -15px rgba(60, 200, 240, 0.6); animation: ldin 0.8s cubic-bezier(0.2, 0.9, 0.2, 1) both; }
+.ld-logo::before { content: ''; position: absolute; inset: -12px; border-radius: 40px; background: conic-gradient(from 0deg, transparent 0 60%, #3cc8f0, #ffb627, transparent); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px)); mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px)); animation: ldspin 1.6s linear infinite; }
+@keyframes ldspin { to { transform: rotate(360deg); } }
+@keyframes ldin { from { opacity: 0; transform: translateY(24px) scale(0.85); } }
+.ld-name { font: 700 clamp(1.4rem, 4vw, 2rem)/1.1 'Bricolage Grotesque', sans-serif; letter-spacing: -0.01em; animation: ldin 0.8s 0.12s cubic-bezier(0.2, 0.9, 0.2, 1) both; }
+.ld-bar { width: min(260px, 70vw); height: 5px; overflow: hidden; border-radius: 9999px; background: rgb(var(--c-fg) / 0.12); animation: ldin 0.8s 0.22s both; }
+.ld-bar i { display: block; height: 100%; border-radius: inherit; transform-origin: left; transform: scaleX(0); background: linear-gradient(90deg, #3cc8f0, #ffb627, #6ed04f); }
+.ld-meta { display: flex; width: min(260px, 70vw); justify-content: space-between; font-size: 0.85rem; color: rgb(var(--c-fg) / 0.65); animation: ldin 0.8s 0.3s both; }
+.ld-meta b { font: 700 0.95rem 'Bricolage Grotesque', sans-serif; color: rgb(var(--c-fg)); font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: reduce) { .ld-logo::before, .ld-glow { animation: none; } .ld-half { transition-duration: 0.01s; } }
